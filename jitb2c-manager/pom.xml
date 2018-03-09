@@ -3,16 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>jitb2c-common</artifactId>
+        <artifactId>jitb2c-parent</artifactId>
         <groupId>com.jit</groupId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../jitb2c-common/pom.xml</relativePath>
+        <relativePath>../jitb2c-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jitb2c-manager</artifactId>
 
     <packaging>pom</packaging>
+
     <modules>
         <module>jitb2c-manager-pojo</module>
         <module>jitb2c-manager-mapper</module>
