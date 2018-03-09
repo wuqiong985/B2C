@@ -31,7 +31,7 @@
     </dependencies>
 
     <build>
-        <!-- 配置插件 -->
+        <!-- 配置Tomcat插件 -->
         <plugins>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>

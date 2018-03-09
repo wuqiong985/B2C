@@ -12,15 +12,40 @@
 
     <url>http://maven.apache.org</url>
     <dependencies>
+        <!-- 依赖service -->
+        <dependency>
+            <groupId>com.jit</groupId>
+            <artifactId>jitb2c-manager-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- JSP相关 -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>${jsp-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 文件上传组件 -->
     </dependencies>
-
-
 
     <build>
         <finalName>jitb2c-manager-web</finalName>
