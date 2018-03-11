@@ -95,3 +95,5 @@ buildNumber.properties
 /jitb2c-manager/jitb2c-manager-service/jitb2c-manager-service.iml
 /jitb2c-manager/jitb2c-manager-web/jitb2c-manager-web.iml
 /jitb2c-manager/jitb2c-manager.iml
+/jitb2c-manager/jitb2c-manager-mapper
+*.iml

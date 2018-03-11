@@ -1,5 +1,8 @@
 package com.jitb2c.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.jitb2c.common.pojo.EUDataGridResult;
 import com.jitb2c.mapper.TbItemMapper;
 import com.jitb2c.pojo.TbItem;
 import com.jitb2c.pojo.TbItemExample;
@@ -44,5 +47,32 @@ public class ItemServiceImpl implements ItemService{
             return items.get(0);
         }
         return null;
+    }
+
+    /**
+     * 商品列表查询
+     * @param page
+     * @param rows
+     * @return
+     */
+    @Override
+    public EUDataGridResult getItems(int page,int rows) {
+        TbItemExample example = new TbItemExample();
+
+        //使用分页
+        PageHelper.startPage(page,rows);
+
+        List<TbItem> list = itemMapper.selectByExample(example);
+
+        //封装结果
+        EUDataGridResult result = new EUDataGridResult();
+        result.setRows(list);
+
+        //取总条数
+        PageInfo<TbItem> pageInfo = new PageInfo<>(list);
+
+        result.setTotal(pageInfo.getTotal());
+
+        return result;
     }
 }
