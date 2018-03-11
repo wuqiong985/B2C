@@ -90,3 +90,8 @@ buildNumber.properties
 .classpath
 .settings
 .metadata
+/jitb2c-manager/jitb2c-manager-mapper/jitb2c-manager-mapper.iml
+/jitb2c-manager/jitb2c-manager-pojo/jitb2c-manager-pojo.iml
+/jitb2c-manager/jitb2c-manager-service/jitb2c-manager-service.iml
+/jitb2c-manager/jitb2c-manager-web/jitb2c-manager-web.iml
+/jitb2c-manager/jitb2c-manager.iml
