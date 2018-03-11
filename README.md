@@ -6,14 +6,14 @@ B2C毕设项目（Idea 创建）
 #### 相关笔记
 
 
-#####1.SKU:最小库存量单位  
+##### 1.SKU:最小库存量单位  
 ````
       Stock Keeping Unit（库存量单位）
       对商品进行细粒度的划分  
       如 Iphone8 16G 深空灰 和 Iphone8 16G 银白色 就是两个不同的SKU
 ````
      
-#####2.逆向工程 
+##### 2.逆向工程 
 ````
       Mybatis的逆向工程。根据数据库表生成java代码。
       生成过程[Idea使用mybatis插件生成逆向工程](https://segmentfault.com/a/1190000009058867)
@@ -21,7 +21,7 @@ B2C毕设项目（Idea 创建）
       详情见“E:\淘淘商城\mybatisGenerator”目录下新增的Idea工程
 ````
 
-######3.SSM框架整合
+##### 3.SSM框架整合
 ````
     3.1	整合的思路
     
@@ -47,7 +47,7 @@ B2C毕设项目（Idea 创建）
         3、Post乱码过滤器
 ````
 
-####4.查询商品列表实现分页
+##### 4.查询商品列表实现分页
 ````
     使用pageHelper插件
     gitHub地址：https://github.com/pagehelper/Mybatis-PageHelper
