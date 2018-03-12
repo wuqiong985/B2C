@@ -123,8 +123,11 @@ var TT = TAOTAO = {
     			    onOpen : function(){
     			    	var _win = this;
     			    	$("ul",_win).tree({
+                            //请求初始化树形控件的url
     			    		url:'/item/cat/list',
     			    		animate:true,
+							//点击父节点，请求初始化子节点动作是tree控件封装好的。
+							//每打开一个父节点，做一次ajax请求
     			    		onClick : function(node){
     			    			if($(this).tree("isLeaf",node.target)){
     			    				// 填写到cid中

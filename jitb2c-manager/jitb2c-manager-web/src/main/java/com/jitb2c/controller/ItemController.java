@@ -1,6 +1,7 @@
 package com.jitb2c.controller;
 
 import com.jitb2c.common.pojo.EUDataGridResult;
+import com.jitb2c.common.pojo.EUTreeNode;
 import com.jitb2c.pojo.TbItem;
 import com.jitb2c.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    /**
+     * 根据id查询商品
+     * @param itemId
+     * @return
+     */
     @RequestMapping ("/item/{itemId}")
     @ResponseBody
     public TbItem getItemById(@PathVariable Long itemId){
@@ -31,10 +37,17 @@ public class ItemController {
         return tbItem;
     }
 
+    /**
+     * 分页查询所有商品
+     * @param page 页数
+     * @param rows 每页条数
+     * @return
+     */
     @RequestMapping ("/item/list")
     @ResponseBody
     public EUDataGridResult getItemList(Integer page,Integer rows){
         EUDataGridResult result = itemService.getItems(page,rows);
         return result;
     }
+
 }
