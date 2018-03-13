@@ -113,3 +113,34 @@ B2C毕设项目（Idea 创建）
         数据库也为树形结构，每条记录通过parent_id和isParent来存储
      
 ````
+
+##### 6.图片保存的位置
+````
+    1、在传统的web项目中，直接将图片放在与WEB-INF同级的目录中，可以在jsp页面中直接访问图片。
+    2、若并发量增加，可以添加服务器，做tomcat集群
+        集群环境存在的问题：肯定会出现有时能访问到，有时不能访问到的情况
+            （两个Tomcat的文件不同步）
+        解决方法：单独为图片创立一个服务器（现在的流程，上传图片，tomcat上传到HTTP服务器，查看图片直接从图片服务器查找）
+                1、需要一个http服务器，可以使用Apache、Nginx（负载均衡和反向代理）。
+                2、使用ftp服务上传图片，用Linux自带的ftp服务器:vsftbd。
+````
+
+##### 7.Nginx命令
+````
+    nginx start 启动Nginx
+    nginx -s stop 强制关闭 
+    nginx -s quit 安全关闭 
+    nginx -s reload 改变配置文件的时候，重启nginx工作进程，来时配置文件生效
+````
+
+   [Nginx conf文件配置参数](http://www.nginx.cn/76.html)
+   
+##### 8.本地电脑搭建ftp服务
+````
+    1、下载软件FileZilla
+    2、调用系统自带服务创建ftp服务
+    3、添加ftp站点（注意使用本机IP）
+    4、使用java代码访问ftp服务（使用Apache提供的Common-net jar包）
+````
+
+   [win10本地ftp服务器搭建](http://blog.csdn.net/gongpeng1966/article/details/70236529)
