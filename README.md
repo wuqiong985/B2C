@@ -144,3 +144,13 @@ B2C毕设项目（Idea 创建）
 ````
 
    [win10本地ftp服务器搭建](http://blog.csdn.net/gongpeng1966/article/details/70236529)
+   
+##### 9.富文本编辑器的使用
+````
+    1、导入js：kindeditor-all-min.js
+    2、定义多行文本textarea（不可见、给定name）
+    3、创建富文本编辑器
+      itemAddEditor = TAOTAO.createEditor("#itemAddForm [name=desc]");
+    4、同步文本框中的商品描述，即将编辑器中的内容放入textarea中
+      itemAddEditor.sync();
+````

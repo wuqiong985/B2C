@@ -3,6 +3,8 @@ package com.jitb2c.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jitb2c.common.pojo.EUDataGridResult;
+import com.jitb2c.common.pojo.JitB2CResult;
+import com.jitb2c.common.utils.IDUtils;
 import com.jitb2c.mapper.TbItemMapper;
 import com.jitb2c.pojo.TbItem;
 import com.jitb2c.pojo.TbItemExample;
@@ -10,6 +12,7 @@ import com.jitb2c.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ public class ItemServiceImpl implements ItemService{
     private TbItemMapper itemMapper;
 
     /**
-     *
+     * 根据Id查询商品
      * @param itemId
      * @return
      */
@@ -74,5 +77,27 @@ public class ItemServiceImpl implements ItemService{
         result.setTotal(pageInfo.getTotal());
 
         return result;
+    }
+
+    /**
+     * 添加商品
+     * @param item 商品对象
+     * @return
+     */
+    @Override
+    public JitB2CResult createItem(TbItem item) {
+        //item补全
+        //1.1生成商品id
+        Long itemId = IDUtils.genItemId();
+        item.setId(itemId);
+        //1.2商品状态，1-正常，2-下架，3-删除
+        item.setStatus((byte) 1);
+        //1.3创建时间
+        item.setCreated(new Date());
+        //1.4更新时间
+        item.setUpdated(new Date());
+        //1.5插入到数据库
+        itemMapper.insert(item);
+        return JitB2CResult.ok();
     }
 }
