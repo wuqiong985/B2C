@@ -1,6 +1,7 @@
 package com.jitb2c.service;
 
 import com.jitb2c.common.pojo.EUDataGridResult;
+import com.jitb2c.common.pojo.JitB2CResult;
 import com.jitb2c.pojo.TbItem;
 
 /**
@@ -26,4 +27,11 @@ public interface ItemService {
      * @return
      */
     EUDataGridResult getItems(int page,int rows);
+
+    /**
+     * 添加商品
+     * @param item 商品对象
+     * @return
+     */
+    JitB2CResult createItem(TbItem item);
 }

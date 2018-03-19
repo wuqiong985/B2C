@@ -1,3 +1,4 @@
+import com.jitb2c.common.utils.FtpUtil;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.junit.Test;
@@ -43,5 +44,16 @@ public class TestFTP {
 
         //关闭连接
         ftpClient.logout();
+    }
+
+    /**
+     * Ftp工具类测试
+     * @throws Exception
+     */
+    @Test
+    public void testFtpUtils() throws Exception{
+        //读取本地文件
+        FileInputStream inputStream = new FileInputStream(new File("D:\\temp\\images\\1.png"));
+        FtpUtil.uploadFile("172.29.4.241",21,"anonymous","","/home/ftpuser/www/images","/2018/3/17","hello.png",inputStream);
     }
 }

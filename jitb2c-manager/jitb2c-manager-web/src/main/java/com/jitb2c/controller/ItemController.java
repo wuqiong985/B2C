@@ -1,16 +1,16 @@
 package com.jitb2c.controller;
 
 import com.jitb2c.common.pojo.EUDataGridResult;
-import com.jitb2c.common.pojo.EUTreeNode;
+import com.jitb2c.common.pojo.JitB2CResult;
 import com.jitb2c.pojo.TbItem;
 import com.jitb2c.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.InputStream;
 
 /**
  * @ClassName:      ItemController
@@ -47,6 +47,13 @@ public class ItemController {
     @ResponseBody
     public EUDataGridResult getItemList(Integer page,Integer rows){
         EUDataGridResult result = itemService.getItems(page,rows);
+        return result;
+    }
+
+    @RequestMapping(value = "/item/save",method = RequestMethod.POST)
+    @ResponseBody
+    public JitB2CResult createItem(TbItem item){
+        JitB2CResult result = itemService.createItem(item);
         return result;
     }
 
