@@ -17,15 +17,20 @@ public class TestFTP {
         //创建一个FtpClient对象
         FTPClient ftpClient = new FTPClient();
 
+
         //创建Ftp连接.默认是21端口
-        ftpClient.connect("172.27.3.132",21);
+        //学校Ip
+//        ftpClient.connect("172.27.3.132",21);
+        //公司Ip
+        ftpClient.connect("172.31.22.62",21);
 
         //登录ftp服务器，使用用户名和密码
         ftpClient.login("anonymous","");
 
         //上传文件
         //读取本地文件
-        FileInputStream inputStream = new FileInputStream(new File("C:\\Users\\wq\\Desktop\\新建文件夹\\wq-1.png"));
+//        FileInputStream inputStream = new FileInputStream(new File("C:\\Users\\wq\\Desktop\\新建文件夹\\wq-1.png"));
+        FileInputStream inputStream = new FileInputStream(new File("C:\\Users\\wuqiong6\\Desktop\\新建文件夹\\wq-1.jpg"));
         //设置上传的路径
         ftpClient.changeWorkingDirectory("/home/ftpuser/www/images");
 
