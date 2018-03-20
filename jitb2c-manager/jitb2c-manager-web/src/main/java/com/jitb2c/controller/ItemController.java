@@ -50,10 +50,15 @@ public class ItemController {
         return result;
     }
 
+    /**
+     * 添加商品并保存
+     * @param item
+     * @return
+     */
     @RequestMapping(value = "/item/save",method = RequestMethod.POST)
     @ResponseBody
-    public JitB2CResult createItem(TbItem item){
-        JitB2CResult result = itemService.createItem(item);
+    public JitB2CResult createItem(TbItem item,String desc) throws Exception {
+        JitB2CResult result = itemService.createItem(item,desc);
         return result;
     }
 

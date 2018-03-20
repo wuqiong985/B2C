@@ -33,5 +33,5 @@ public interface ItemService {
      * @param item 商品对象
      * @return
      */
-    JitB2CResult createItem(TbItem item);
+    JitB2CResult createItem(TbItem item,String desc) throws Exception;
 }

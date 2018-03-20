@@ -5,8 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.jitb2c.common.pojo.EUDataGridResult;
 import com.jitb2c.common.pojo.JitB2CResult;
 import com.jitb2c.common.utils.IDUtils;
+import com.jitb2c.mapper.TbItemDescMapper;
 import com.jitb2c.mapper.TbItemMapper;
 import com.jitb2c.pojo.TbItem;
+import com.jitb2c.pojo.TbItemDesc;
 import com.jitb2c.pojo.TbItemExample;
 import com.jitb2c.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class ItemServiceImpl implements ItemService{
 
     @Autowired
     private TbItemMapper itemMapper;
+
+    @Autowired
+    private TbItemDescMapper itemDescMapper;
 
     /**
      * 根据Id查询商品
@@ -85,7 +90,7 @@ public class ItemServiceImpl implements ItemService{
      * @return
      */
     @Override
-    public JitB2CResult createItem(TbItem item) {
+    public JitB2CResult createItem(TbItem item,String desc) throws Exception {
         //item补全
         //1.1生成商品id
         Long itemId = IDUtils.genItemId();
@@ -96,8 +101,33 @@ public class ItemServiceImpl implements ItemService{
         item.setCreated(new Date());
         //1.4更新时间
         item.setUpdated(new Date());
+
+
         //1.5插入到数据库
         itemMapper.insert(item);
+
+        //2.添加商品描述
+        JitB2CResult jitB2CResult = insertItemDesc(itemId,desc);
+
+        if (jitB2CResult.getStatus() != 200){
+            throw new Exception();
+        }
+        return JitB2CResult.ok();
+    }
+
+    /**
+     * 添加商品描述到数据库
+     * @param itemId
+     * @param desc
+     * @return
+     */
+    private JitB2CResult insertItemDesc(Long itemId,String desc){
+        TbItemDesc itemDesc = new TbItemDesc();
+        itemDesc.setItemId(itemId);
+        itemDesc.setItemDesc(desc);
+        itemDesc.setUpdated(new Date());
+        itemDesc.setCreated(new Date());
+        itemDescMapper.insert(itemDesc);
         return JitB2CResult.ok();
     }
 }
