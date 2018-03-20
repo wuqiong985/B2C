@@ -156,6 +156,90 @@ B2C毕设项目（Idea 创建）
 ````
 
 ##### 10.商品规格参数的创建
+   ###### 10.1第一种方案
 ```` 
-    
+    第一种方案：使用二维表来维护规格数据。
+          表一：规格组信息 tb_item_param_group
+              列名	        类型	    长度	    可以null	    键	    说明
+              Id	        Int		        否	        P	    主键（自增长）
+              group_name	varchar	20	    否		            规格分组名称
+              item_cat_id	Int		        否	        F	    商品分类id（外键）
+          
+          表二：规格项信息 tb_item_param_key
+              列名	        类型	    长度	    可以null	    键	    说明
+              Id	        Int		        否	        P	    主键（自增长）
+              param_name	varchar	20	    否		            规格项目名称
+              group_id	    Int		        否	        F	    规格分组id（外键）
+          
+          表三：商品规格信息 tb_item_param_value
+              列名	        类型	    长度	    可以null	    键	    说明
+              item_id	    Int		        否	        P	    商品id（联合主键）
+              param_id	    varchar		    否	        P	    规格项id（联合主键）
+              param_value	varchar	500	    否		            规格信息
+          
+          select pg.group_name,pk.param_name,pv.param_value from 
+            tb_item_param_value pv,
+            tb_item_param_key pk,
+            tb_item_param_group pg 
+          where item_id = 855739 and pv.param_id = pk.id and pg.id = pk.group_id;
+          
+          //使用外连接查询则全部外连接
+          select pg.group_name,pk.param_name,pv.param_value from 
+            tb_item_param_value pv 
+            left join tb_item_param_key pk on pv.param_id = pk.id 
+            left join tb_item_param_group pg on pg.id = pk.group_id
+          where item_id = 855739
+          
+          缺点：1、需要创建的表比较多，表和表之间的关系复杂，查询时需要大量的关联。查询效率低。
+               2、如果展示的规格组或者是规格项需要调整实现麻烦，需要添加排序列。
+               3、维护不方便，如果删除某个规格分组信息，则所有与之相关的商品的规格信息都发生变化。
+
+````
+   ###### 10.2第二种方案
+```` 
+    第二种方案:模板方法解决
+        1、每一个商品分类对应一个参数模板
+            [
+                {
+                    "group": "主体",  //组名称
+                    "params": [ // 记录规格成员
+                        "品牌",
+                        "型号",
+                        "颜色",
+                        "上市年份",
+                        "上市月份"
+                    ]
+                }，
+                {
+                    "group": "网络",  //组名称
+                    "params": [ // 记录规格成员
+                        "4G",
+                        "3G,
+                        "2G"
+                    ]
+                }
+            ]
+        2、添加商品信息时，根据规格参数模板生成规格参数录入项。保存商品时将规格参数生成一个字符串保存到数据库中。
+            [
+                {
+                    "group": "主体",
+                    "params": [
+                        {
+                            "k": "品牌",
+                            "v": "苹果（Apple）"
+                        },
+                        {
+                            "k": "型号",
+                            "v": "iPhone 6 A1589"
+                        },
+                        {
+                            "k": "智能机",
+                            "v": "是 "
+                        }
+                    ]
+                }
+            ]
+
+        3、展示商品详情时，从数据库中取出规格参数信息，转换成html展示给用户。
+
 ````
