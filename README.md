@@ -160,22 +160,22 @@ B2C毕设项目（Idea 创建）
 ```` 
     第一种方案：使用二维表来维护规格数据。
           表一：规格组信息 tb_item_param_group
-              列名             类型        长度        可以null      键     说明
-              Id              Int                     否	       P     主键（自增长）
-              group_name      varchar     20	      否                 规格分组名称
-              item_cat_id     Int                     否	       F     商品分类id（外键）
+              列名           类型         长度        可以null    键     说明
+              Id             Int                      否          P      主键（自增长）
+              group_name     varchar      20          否                 规格分组名称
+              item_cat_id    Int                      否          F      商品分类id（外键）
           
           表二：规格项信息 tb_item_param_key
-              列名	           类型	长度	    可以null	    键	    说明
-              Id	        	Int		        否	        P	    主键（自增长）
-              param_name	varchar	20	    否		            规格项目名称
-              group_id	    	Int		        否	        F	    规格分组id（外键）
+              列名           类型         长度        可以null    键     说明
+              Id             Int          否                      P      主键（自增长）
+              param_name     varchar      20          否                 规格项目名称
+              group_id       Int          否                      F      规格分组id（外键）
           
           表三：商品规格信息 tb_item_param_value
-              列名	        类型	    长度	    可以null	    键	    说明
-              item_id	    Int		        否	        P	    商品id（联合主键）
-              param_id	    varchar		    否	        P	    规格项id（联合主键）
-              param_value	varchar	500	    否		            规格信息
+              列名           类型         长度        可以null    键     说明
+              item_id        Int                      否          P      商品id（联合主键）
+              param_id       varchar                  否          P      规格项id（联合主键）
+              param_value    varchar      500         否                 规格信息
           
           select pg.group_name,pk.param_name,pv.param_value from 
             tb_item_param_value pv,
