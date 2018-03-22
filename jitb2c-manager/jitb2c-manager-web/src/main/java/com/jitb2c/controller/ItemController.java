@@ -2,6 +2,7 @@ package com.jitb2c.controller;
 
 import com.jitb2c.common.pojo.EUDataGridResult;
 import com.jitb2c.common.pojo.JitB2CResult;
+import com.jitb2c.common.utils.JsonUtils;
 import com.jitb2c.pojo.TbItem;
 import com.jitb2c.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,10 @@ public class ItemController {
      */
     @RequestMapping ("/item/list")
     @ResponseBody
-    public EUDataGridResult getItemList(Integer page,Integer rows){
+    public String getItemList(Integer page,Integer rows){
         EUDataGridResult result = itemService.getItems(page,rows);
-        return result;
+        String json = JsonUtils.objectToJson(result);
+        return json;
     }
 
     /**
