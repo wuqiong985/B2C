@@ -43,4 +43,9 @@ public class ItemCatServiceImpl implements ItemCatService {
 
         return result;
     }
+
+    @Override
+    public String getCatName(long itemCatId) {
+        return  itemCatMapper.selectByPrimaryKey(itemCatId).getName();
+    }
 }

@@ -8,10 +8,12 @@ import com.jitb2c.mapper.TbItemCatMapper;
 import com.jitb2c.mapper.TbItemMapper;
 import com.jitb2c.mapper.TbItemParamMapper;
 import com.jitb2c.pojo.*;
+import com.jitb2c.service.ItemCatService;
 import com.jitb2c.service.ItemParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -27,6 +29,8 @@ public class ItemParamServiceImpl implements ItemParamService {
     @Autowired
     TbItemCatMapper itemCatMapper;
 
+    @Resource
+    ItemCatService itemCatService;
     /**
      * 根据商品类目Id itemCatId获取商品分组信息
      * @param itemCatId
@@ -62,13 +66,10 @@ public class ItemParamServiceImpl implements ItemParamService {
 
         List<TbItemParam> list = itemParamMapper.selectByExampleWithBLOBs(example);
 
-//        for (TbItemParam itemParam:list){
-//            TbItemCatExample example1 = new TbItemCatExample();
-//            TbItemCatExample.Criteria criteria = example1.createCriteria();
-//            criteria.andParentIdEqualTo(itemParam.getItemCatId());
-//            List<TbItemCat> itemCat = itemCatMapper.selectByExample(example1);
-//            itemParam.setItemCat(itemCat.get(0).getName());
-//        }
+        //通过catId查找catName
+        for (TbItemParam itemParam:list){
+            itemParam.setItemCatName(itemCatService.getCatName(itemParam.getItemCatId()));
+        }
 
         //封装结果
         EUDataGridResult result = new EUDataGridResult();

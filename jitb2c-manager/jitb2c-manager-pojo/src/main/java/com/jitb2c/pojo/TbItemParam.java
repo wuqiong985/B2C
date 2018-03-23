@@ -9,18 +9,18 @@ public class TbItemParam {
 
     private Date created;
 
-    private String itemCat;
+    private String itemCatName;
 
     private Date updated;
 
     private String paramData;
 
-    public String getItemCat() {
-        return itemCat;
+    public String getItemCatName() {
+        return itemCatName;
     }
 
-    public void setItemCat(String itemCat) {
-        this.itemCat = itemCat;
+    public void setItemCatName(String itemCatName) {
+        this.itemCatName = itemCatName;
     }
 
     public Long getId() {

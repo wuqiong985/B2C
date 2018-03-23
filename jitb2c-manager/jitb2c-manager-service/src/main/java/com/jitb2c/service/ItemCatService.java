@@ -11,4 +11,6 @@ import java.util.List;
 public interface ItemCatService {
 
     List<EUTreeNode> getCatList(long parentId);
+
+    String getCatName(long itemCatId);
 }
