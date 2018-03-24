@@ -47,7 +47,8 @@ public class ItemParamServiceImpl implements ItemParamService {
         TbItemParamExample.Criteria criteria = example.createCriteria();
         criteria.andItemCatIdEqualTo(itemCatId);
 
-        List<TbItemParam> items = itemParamMapper.selectByExample(example);
+        //paramData在数据库中存储的是大文本类型，所以要使用selectByExampleWithBLOBs方法
+        List<TbItemParam> items = itemParamMapper.selectByExampleWithBLOBs(example);
         //判断是否查询到结果
         if (items != null && items.size() > 0){
             return JitB2CResult.ok(items.get(0));

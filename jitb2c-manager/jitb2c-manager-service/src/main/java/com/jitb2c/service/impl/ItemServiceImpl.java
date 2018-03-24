@@ -7,9 +7,11 @@ import com.jitb2c.common.pojo.JitB2CResult;
 import com.jitb2c.common.utils.IDUtils;
 import com.jitb2c.mapper.TbItemDescMapper;
 import com.jitb2c.mapper.TbItemMapper;
+import com.jitb2c.mapper.TbItemParamItemMapper;
 import com.jitb2c.pojo.TbItem;
 import com.jitb2c.pojo.TbItemDesc;
 import com.jitb2c.pojo.TbItemExample;
+import com.jitb2c.pojo.TbItemParamItem;
 import com.jitb2c.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,10 @@ public class ItemServiceImpl implements ItemService{
     @Autowired
     private TbItemDescMapper itemDescMapper;
 
+    //商品规格参数详情mapper
+    @Autowired
+    private TbItemParamItemMapper itemParamItemMapper;
+
     /**
      * 根据Id查询商品
      * @param itemId
@@ -44,13 +50,10 @@ public class ItemServiceImpl implements ItemService{
 //        TbItem item = itemMapper.selectByPrimaryKey(itemId);
 
         TbItemExample example = new TbItemExample();
-
         //添加查询条件，若不添加，则默认查询所有
         TbItemExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(itemId);
-
         List<TbItem> items = itemMapper.selectByExample(example);
-
         if (items != null && items.size() > 0){
             return items.get(0);
         }
@@ -90,7 +93,7 @@ public class ItemServiceImpl implements ItemService{
      * @return
      */
     @Override
-    public JitB2CResult createItem(TbItem item,String desc) throws Exception {
+    public JitB2CResult createItem(TbItem item,String desc,String itemParam) throws Exception {
         //item补全
         //1.1生成商品id
         Long itemId = IDUtils.genItemId();
@@ -101,14 +104,14 @@ public class ItemServiceImpl implements ItemService{
         item.setCreated(new Date());
         //1.4更新时间
         item.setUpdated(new Date());
-
-
         //1.5插入到数据库
         itemMapper.insert(item);
-
         //2.添加商品描述
         JitB2CResult jitB2CResult = insertItemDesc(itemId,desc);
-
+        if (jitB2CResult.getStatus() != 200){
+            throw new Exception();
+        }
+        jitB2CResult = insertItemParamItem(itemId,itemParam);
         if (jitB2CResult.getStatus() != 200){
             throw new Exception();
         }
@@ -128,6 +131,23 @@ public class ItemServiceImpl implements ItemService{
         itemDesc.setUpdated(new Date());
         itemDesc.setCreated(new Date());
         itemDescMapper.insert(itemDesc);
+        return JitB2CResult.ok();
+    }
+
+    /**
+     * 增加商品详细规格参数
+     * @param itemId 商品id
+     * @param itemParam 商品规格参数
+     * @return
+     */
+    private JitB2CResult insertItemParamItem(Long itemId,String itemParam){
+        TbItemParamItem itemParamItem = new TbItemParamItem();
+        itemParamItem.setItemId(itemId);
+        itemParamItem.setParamData(itemParam);
+        itemParamItem.setUpdated(new Date());
+        itemParamItem.setCreated(new Date());
+        //向表中插入数据
+        itemParamItemMapper.insertSelective(itemParamItem);
         return JitB2CResult.ok();
     }
 }

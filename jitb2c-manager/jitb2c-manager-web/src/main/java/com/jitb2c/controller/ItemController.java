@@ -54,13 +54,15 @@ public class ItemController {
 
     /**
      * 添加商品并保存
-     * @param item
+     * @param item 商品信息
+     * @param desc  商品描述
+     * @param itemParams 商品详细规格参数
      * @return
      */
     @RequestMapping(value = "/item/save",method = RequestMethod.POST)
     @ResponseBody
-    public JitB2CResult createItem(TbItem item,String desc) throws Exception {
-        JitB2CResult result = itemService.createItem(item,desc);
+    public JitB2CResult createItem(TbItem item,String desc,String itemParams) throws Exception {
+        JitB2CResult result = itemService.createItem(item,desc,itemParams);
         return result;
     }
 
