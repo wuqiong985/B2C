@@ -2,12 +2,19 @@ package com.jitb2c.pojo;
 
 import java.util.Date;
 
-public class TbItemParam {
+/**
+ * 增加了类目名的TbItemParam
+ * @Author wuqiong6
+ * @Date 2018/3/24 15:01
+ */
+public class TbItemParamWithCatName {
     private Long id;
 
     private Long itemCatId;
 
     private Date created;
+
+    private String itemCatName;
 
     private Date updated;
 
@@ -37,6 +44,14 @@ public class TbItemParam {
         this.created = created;
     }
 
+    public String getItemCatName() {
+        return itemCatName;
+    }
+
+    public void setItemCatName(String itemCatName) {
+        this.itemCatName = itemCatName;
+    }
+
     public Date getUpdated() {
         return updated;
     }
@@ -50,6 +65,6 @@ public class TbItemParam {
     }
 
     public void setParamData(String paramData) {
-        this.paramData = paramData == null ? null : paramData.trim();
+        this.paramData = paramData;
     }
 }
