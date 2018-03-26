@@ -429,4 +429,27 @@ B2C毕设项目（Idea 创建）
             StringEntity entity = new UrlEncodedFormEntity(kvList);
             //设置请求的内容
             post.setEntity(entity);
+            
+        3、因为其他工程也可能用到HttpClient，所以将其放在common中
+            详情见com/jitb2c/common/utils/HttpClientUtil.java
 ````
+
+##### 15.首页大广告位的实现
+````
+    1、需求分析
+        需要从服务层获取如下格式的字符串
+        {
+        　　　　"srcB":"http://image.taotao.com/images/2015/03/03/2015030304360302109345.jpg",
+        　　　　"height":240,
+        　　　　"alt":"",
+        　　　　"width":670,
+        　　　　"src":"http://image.taotao.com/images/2015/03/03/2015030304360302109345.jpg",
+        　　　　"widthB":550,
+        　　　　"href":"http://sale.jd.com/act/e0FMkuDhJz35CNt.html?cpdad=1DLSUE",
+        　　　　"heightB":240
+        }
+    2、当首页一存在时，就要获得该字符串，所以应该使用springMVC的modelAndView对象将字符串传递给jsp页面
+      如何获得json字符串：通过调用rest服务层获得一个广告位对应的内容列表，将列表转换成json数据格式要求的pojo对象列表。
+      需要使用httpclient调用服务
+````
+
