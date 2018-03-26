@@ -451,5 +451,9 @@ B2C毕设项目（Idea 创建）
     2、当首页一存在时，就要获得该字符串，所以应该使用springMVC的modelAndView对象将字符串传递给jsp页面
       如何获得json字符串：通过调用rest服务层获得一个广告位对应的内容列表，将列表转换成json数据格式要求的pojo对象列表。
       需要使用httpclient调用服务
+      
+    实现流程：调用httpclient的工具类，传入url从rest服务层得到数据（String），将数据转化为在rest服务层对应的对象，
+            将对象转化为前台所需要的数据格式的json数据，将json数据传入controller，controller将json数据转化为
+            model对象给jsp页面展现。
 ````
 
