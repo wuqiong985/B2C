@@ -8,5 +8,5 @@ import com.jitb2c.rest.pojo.CatResult;
  */
 public interface ItemCatService {
 
-    public CatResult getItemCatList();
+     CatResult getItemCatList();
 }
