@@ -88,27 +88,62 @@ public class ContentCatServiceImpl implements ContentCatService {
         return JitB2CResult.ok(contentCategory);
     }
 
+    /**
+     * 删除节点
+     * @param id 节点id
+     * @return
+     */
     @Override
-    public JitB2CResult deleteContentCat(long parentId, long id) {
-        TbContentCategoryExample example = new TbContentCategoryExample();
-        TbContentCategoryExample.Criteria criteria = example.createCriteria();
-        criteria.andParentIdEqualTo(parentId);
-        criteria.andIdEqualTo(id);
-        contentCategoryMapper.deleteByExample(example);
-
-        //查询被删除节点的父节点是否存在其他子节点，若不存在，则将其置为子节点
-        TbContentCategoryExample example1 = new TbContentCategoryExample();
-        TbContentCategoryExample.Criteria criteria1 = example1.createCriteria();
-        criteria1.andParentIdEqualTo(parentId);
-        Long count = contentCategoryMapper.countByExample(example1);
-        if (count == 0){
-            TbContentCategory parentCat = contentCategoryMapper.selectByPrimaryKey(parentId);
-            parentCat.setIsParent(false);
-            contentCategoryMapper.updateByPrimaryKey(parentCat);
-        }
-
+    public JitB2CResult deleteContentCat(long id) {
+        deleteContentCatAndChild(id);
         return JitB2CResult.ok();
     }
 
+    /**
+     * 更新节点
+     * @param id 节点id
+     * @param name 需要修改的名称
+     * @return
+     */
+    @Override
+    public JitB2CResult updateContentCat(long id, String name) {
+        TbContentCategory contentCategory = contentCategoryMapper.selectByPrimaryKey(id);
+        contentCategory.setName(name);
+        contentCategoryMapper.updateByPrimaryKey(contentCategory);
+        return JitB2CResult.ok();
+    }
 
+    //删除子节点
+    public void deleteContentCatAndChild(long id){
+
+        //查询被删除的节点是否是父节点
+        TbContentCategory contentCategory = contentCategoryMapper.selectByPrimaryKey(id);
+        if (!contentCategory.getIsParent()){
+            //如果被删除节点的父亲只有它一个子节点，改变父节点的状态
+            if (getChildren(contentCategory.getParentId()).size() == 0){
+                TbContentCategory parentNode = contentCategoryMapper.selectByPrimaryKey(contentCategory.getParentId());
+                parentNode.setIsParent(false);
+                contentCategoryMapper.updateByPrimaryKey(parentNode);
+            }
+            contentCategoryMapper.deleteByPrimaryKey(id);
+        }else{
+            //如果是父节点，递归删除,先获取所有的子节点
+            List<TbContentCategory> children = getChildren(contentCategory.getId());
+            //便利删除子节点
+            for (TbContentCategory child:children) {
+                deleteContentCatAndChild(child.getId());
+            }
+            //把父节点删了
+            contentCategoryMapper.deleteByPrimaryKey(contentCategory.getId());
+        }
+    }
+
+    //查询该id的父亲所有子节点
+    public List<TbContentCategory> getChildren(long parentId){
+        TbContentCategoryExample example = new TbContentCategoryExample();
+        TbContentCategoryExample.Criteria criteria = example.createCriteria();
+        criteria.andParentIdEqualTo(parentId);
+        List<TbContentCategory> children = contentCategoryMapper.selectByExample(example);
+        return children;
+    }
 }

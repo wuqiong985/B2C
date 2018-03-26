@@ -34,16 +34,39 @@ public class ContentCategoryController {
         return contentCatService.getContentCatList(parentId);
     }
 
+    /**
+     * 新增节点
+     * @param parentId
+     * @param name
+     * @return
+     */
     @RequestMapping("/create")
     @ResponseBody
     public JitB2CResult createContentCatNode(long parentId,String name){
         return contentCatService.insertContentCat(parentId,name);
     }
 
+    /**
+     * 删除内容分类
+     * @param id
+     * @return
+     */
     @RequestMapping("/delete")
     @ResponseBody
-    public JitB2CResult deleteContentCatNode(long parentId,long id){
-        return contentCatService.deleteContentCat(parentId,id);
+    public JitB2CResult deleteContentCatNode(long id){
+        return contentCatService.deleteContentCat(id);
+    }
+
+    /**
+     * 更新节点名称
+     * @param id 需要更新的节点的id
+     * @param name 更新之后的名称
+     * @return
+     */
+    @RequestMapping("/update")
+    @ResponseBody
+    public JitB2CResult updateContentCatNode(long id,String name){
+        return contentCatService.updateContentCat(id,name);
     }
 
 }

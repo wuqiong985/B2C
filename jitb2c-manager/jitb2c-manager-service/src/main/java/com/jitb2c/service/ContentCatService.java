@@ -15,5 +15,7 @@ public interface ContentCatService {
 
     JitB2CResult insertContentCat(long parentId,String name);
 
-    JitB2CResult deleteContentCat(long parentId,long id);
+    JitB2CResult deleteContentCat(long id);
+
+    JitB2CResult updateContentCat(long id,String name);
 }
