@@ -458,3 +458,148 @@ B2C毕设项目（Idea 创建）
             model对象给jsp页面展现。
 ````
 
+#### 七、Redis缓存
+##### 16.Redis的安装
+   [Redis Windows安装文件位置](https://github.com/MicrosoftArchive/redis/releases)    
+   [安装过程](https://www.cnblogs.com/M-LittleBird/p/5902850.html)  
+   [redis集群机制](http://blog.jobbole.com/103258/) 
+```` 
+    1、该项目的redis是装在Windows环境下的，没有装在Linux系统下（需要装虚拟机）
+    2、redis的常用命令
+        卸载服务：redis-server --service-uninstall
+        开启服务：redis-server --service-start
+        停止服务：redis-server --service-stop
+        ping pong
+        set a 10 设置key a value 10
+        get a    获取key为a 的value
+        incr a   a自增 +1
+        decr a   a自剑 -1
+        del a    删除a
+        keys *   所有的key
+        
+        常用类型 String Hash List Set SortedSet
+        
+    3、redis.windows.conf 中要把daemonize 改为yes，即将redis作为守护进程运行，及在后台保持运行。
+  
+````
+   [Windows搭建redis集群环境](https://www.cnblogs.com/yaozb/p/6911395.html)
+##### 17.redis集群架构
+```` 
+    ①、集群有三个节点，每个节点有一主一备。
+    ②、搭建一个伪分布式的集群，使用6个redis实例来模拟。
+    
+    搭建集群需要使用到官方提供的ruby脚本
+    
+    1.创建六个redis实例 7001-7006
+    2.修改配置文件，主要是改端口 
+        cluster -enabled yes （说明要做集群）
+    3.启动redis实例,添加到服务
+    4.将创建集群的脚本文件 redis-trib.rb 拷贝到根目录下
+    5.在跟目录执行脚本
+        redis-trib.rb create --replicas 1 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 
+                                          127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006
+    
+    redis-cli -h 127.0.0.1 -p 7002 -c （-c必须）连接集群命令
+    
+    redis单机版的开关
+    
+    redis集群的开关
+        直接用服务关
+    
+    redis单机版一个服务下有多个库（16），不同库中的key可以同名
+    redis集群只有一个库。
+````
+
+##### 18.Jedis的使用
+```` 
+    @Test
+        public void testJedisSingle(){
+            //创建一个jedis对象
+            Jedis jedis  = new Jedis("127.0.0.1",6379);
+            //调用jedis对象的方法,方法名称和redis的命令一致
+            jedis.set("key1","jedis test");
+            String string = jedis.get("key1");
+            System.out.println(string);
+            //关闭jedis
+            jedis.close();
+        }
+    
+        /**
+         * 使用连接池
+         */
+        @Test
+        public void testJedisPool(){
+            //创建Jedis连接池
+            JedisPool pool = new JedisPool("127.0.0.1",6379);
+            //从jedis连接池获取jedis对象
+            Jedis jedis = pool.getResource();
+            System.out.println(jedis.get("key1"));
+            //使用完需要关闭jedis对象
+            jedis.close();
+        }
+    
+        /**
+         * 集群连接
+         */
+        @Test
+        public void testJedisCluster(){
+            HashSet<HostAndPort> nodes = new HashSet<>();
+            nodes.add(new HostAndPort("127.0.0.1",7001));
+            nodes.add(new HostAndPort("127.0.0.1",7002));
+            nodes.add(new HostAndPort("127.0.0.1",7003));
+            nodes.add(new HostAndPort("127.0.0.1",7004));
+            nodes.add(new HostAndPort("127.0.0.1",7005));
+            nodes.add(new HostAndPort("127.0.0.1",7006));
+            JedisCluster cluster = new JedisCluster(nodes);
+            cluster.set("key1","1000");
+            System.out.println(cluster.get("key1"));
+        }
+````
+
+##### 19.业务逻辑添加缓存
+```` 
+    1、spring整合jedis，以供后面服务调用
+        <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+            ......
+        </bean>
+        
+        <!--jedis 客户端单机版-->
+        <!--<bean id="redisClient" class="redis.clients.jedis.JedisPool">-->
+            <!--<constructor-arg name="host" value="127.0.0.1"/>-->
+            <!--<constructor-arg name="port" value="6379"/>-->
+            <!--<constructor-arg name="poolConfig" ref="jedisPoolConfig"/>-->
+        <!--</bean>-->
+    
+        <!--jedis 集群版配置-->
+        <bean id="redisClient" class="redis.clients.jedis.JedisCluster">
+            <constructor-arg name="nodes" >
+                <set>
+                    <bean class="redis.clients.jedis.HostAndPort">
+                        <constructor-arg name="host" value="127.0.0.1"/>
+                        <constructor-arg name="port" value="7001"/>
+                    </bean>
+                    <bean class="redis.clients.jedis.HostAndPort">
+                        <constructor-arg name="host" value="127.0.0.1"/>
+                        <constructor-arg name="port" value="7002"/>
+                    </bean>
+                    <bean class="redis.clients.jedis.HostAndPort">
+                        <constructor-arg name="host" value="127.0.0.1"/>
+                        <constructor-arg name="port" value="7003"/>
+                    </bean>
+                    <bean class="redis.clients.jedis.HostAndPort">
+                        <constructor-arg name="host" value="127.0.0.1"/>
+                        <constructor-arg name="port" value="7004"/>
+                    </bean>
+                    <bean class="redis.clients.jedis.HostAndPort">
+                        <constructor-arg name="host" value="127.0.0.1"/>
+                        <constructor-arg name="port" value="7005"/>
+                    </bean>
+                    <bean class="redis.clients.jedis.HostAndPort">
+                        <constructor-arg name="host" value="127.0.0.1"/>
+                        <constructor-arg name="port" value="7006"/>
+                    </bean>
+                </set>
+            </constructor-arg>
+            <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+        </bean>
+````
