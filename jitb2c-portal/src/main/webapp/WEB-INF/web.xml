@@ -57,4 +57,8 @@
         <!-- 伪静态化 -->
         <url-pattern>*.html</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>jitb2c-portal</servlet-name>
+        <url-pattern>*.action</url-pattern>
+    </servlet-mapping>
 </web-app>

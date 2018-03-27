@@ -402,6 +402,7 @@ B2C毕设项目（Idea 创建）
                     HttpGet get = new HttpGet(uriBuilder.build());
                 
         2、使用HTTPclient执行post请求
+            (执行post请求可能出现406报错，原因是请求了html,不能转换为json数据)
             public void doPost() throws Exception{
                     //创建一个HttpClient对象
                     CloseableHttpClient httpClient = HttpClients.createDefault();

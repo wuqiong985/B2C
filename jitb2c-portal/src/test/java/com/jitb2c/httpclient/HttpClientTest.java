@@ -84,15 +84,15 @@ public class HttpClientTest {
         //创建一个HttpClient对象
         CloseableHttpClient httpClient = HttpClients.createDefault();
         //创建一个post请求 (只有*.html的才会被拦截，项目设置)
-        HttpPost post = new HttpPost("http://localhost:8083/httpclient/post1.html");
-
+//        HttpPost post = new HttpPost("http://localhost:8083/httpclient/post1.action");
+        HttpPost post = new HttpPost("http://localhost:8083/httpclient/post2.action");
         //创建一个entity，模拟一个表单
         List<NameValuePair> kvList = new ArrayList<>();
         kvList.add(new BasicNameValuePair("username","张三"));
         kvList.add(new BasicNameValuePair("password","123"));
 
         //包装成一个entity对象
-        StringEntity entity = new UrlEncodedFormEntity(kvList);
+        StringEntity entity = new UrlEncodedFormEntity(kvList,"utf-8");
         //设置请求的内容
         post.setEntity(entity);
         //执行post请求
