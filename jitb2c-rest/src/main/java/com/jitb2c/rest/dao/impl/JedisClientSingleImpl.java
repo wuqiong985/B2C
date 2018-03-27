@@ -1,4 +1,4 @@
-package com.jitb2c.rest.dao.Impl;
+package com.jitb2c.rest.dao.impl;
 
 import com.jitb2c.rest.dao.JedisClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,4 +78,21 @@ public class JedisClientSingleImpl implements JedisClient {
         jedis.close();
         return result;
     }
+
+    @Override
+    public long del(String key) {
+        Jedis jedis = jedisPool.getResource();
+        Long result = jedis.del(key);
+        jedis.close();
+        return result;
+    }
+
+    @Override
+    public long hdel(String hkey, String key) {
+        Jedis jedis = jedisPool.getResource();
+        Long result = jedis.hdel(hkey, key);
+        jedis.close();
+        return result;
+    }
+
 }

@@ -602,4 +602,115 @@ B2C毕设项目（Idea 创建）
             </constructor-arg>
             <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
         </bean>
+     
+    2、添加缓存不能破坏原有逻辑。
+       在rest中实现缓存，供manager调用。
+    
+    3、同步缓存
+       需要在后台管理系统中添加一个服务调用的逻辑。当修改内容信息后，需要调用此服务同步缓存。
+       （通过rest暴露服务供manager调用）
+      如下：
+       //添加缓存同步逻辑
+       HttpClientUtil.doGet(REST_BASE_URL + REST_CONTENT_SYNC_URL + content.getCategoryId());
+````
+
+   
+#### 八、solr搜索   
+   [solr安装](https://blog.csdn.net/luenxin/article/details/50838895)     
+   [solr中文分词器](https://www.cnblogs.com/dfg727/archive/2013/06/17/3139719.html)
+##### 20.solr单机安装
+```` 
+    1、solr为其他模块提供服务，所以要创建一个搜索模块
+    
+    2、solr实现全文搜索
+        Solr 是Apache下的一个顶级开源项目，采用Java开发，它是基于Lucene的全文搜索服务器。Solr提供了比Lucene
+     更为丰富的查询语言，同时实现了可配置、可扩展，并对索引、搜索性能进行了优化。 
+        Solr是一个全文检索服务器，只需要进行配置就可以实现全文检索服务。
+        
+    3、下载solr5.5.5.zip版本
+           1、官网下载solr-5.5.0.zip解压到D:\tools\solr-5.5.0目录 
+              解压之后的solr-5.5.0文件夹包含了几乎所有你需要的东西。
+           2、复制solr-5.5.0/server/solr-webapp/webapp到tomcat下的webapps目录下，改名为solr。
+           3、将solr-5.5.0/server/lib/ext/目录下的所有jar包复制到tomcat/webapps/solr/WEB-INF/lib/下。
+           4、将solr-5.5.0/server/solr目录复制到D:\tools\apache-tomcat-8.0.32\bin目录下，这个就是传说中的solr/home(存放检索数据)。
+           5、设置solr/home：编辑D:\tools\apache-tomcat-8.0.32\webapps\solr\WEB-INF\web.xml文件，以下部分是注释的，打开。solr在
+              启动的时候会去这个根目录下加载配置信息。
+           <env-entry>  
+              <env-entry-name>solr/home</env-entry-name>  
+              <env-entry-value>D:\\tools\\apache-tomcat-8.0.32\\bin\\solr</env-entry-value>  
+              <env-entry-type>java.lang.String</env-entry-type>  
+           </env-entry>  
+           6、将solr-5.5.0/server/resouce下的log4j.properties文件复制到tomcat/weapps/solr/WEB-INF/classes目录下，如果没有则新建。
+           7、将solr-5.5.0/dist目录下的solr-dataimporthandler-5.5.0.jar和solr-dataimporthandler-extras-5.5.0.jar复制到
+              tomcat/webapps/solr/WEB-INF/lib/下，这个是为了以后导入数据库表数据。
+           到这里，solr5的环境就搭建好了，重启tomcat服务，访问http://localhost:8080/solr/index.html可以看到solr控制台。 
+    
+    4、solr配置业务字段
+        1、在solr中默认是中文分析器，需要手工配置。配置一个FieldType，在FieldType中指定中文分析器。
+        2、Solr中的字段必须是先定义后使用。
+       
+        中文分析器的配置
+            1、使用IK-Analyzer。把分析器的文件夹上传到服务器
+            2、需要把分析器的jar包添加到solr工程中。
+                把jar包ik-analyzer-solr-6.3.0.jar放入C:\JavaEnvironment\apache-tomcat-8.5.24\webapps\solr\WEB-INF\lib
+            3、需要把IKAnalyzer需要的扩展词典及停用词词典、配置文件复制到solr工程的classpath
+                C:\JavaEnvironment\apache-tomcat-8.5.24\webapps\solr\WEB-INF\classes
+            注意：扩展词典及停用词词典的字符集必须是utf-8。不能使用windows记事本编辑。
+            4、配置fieldType。需要在solrhome/collection1/conf/schema.xml中配置。
+                	<!-- 配置IK分词器start -->
+                		 <fieldType name="text_ik" class="solr.TextField" positionIncrementGap="100">
+                		    <analyzer type="index">
+                		    <tokenizer class="org.wltea.analyzer.lucene.IKTokenizerFactory" useSmart="false" isMaxWordLength="false"/>
+                		        <filter class="solr.LowerCaseFilterFactory"/>
+                		    </analyzer>
+                
+                		    <analyzer type="query">
+                		        <tokenizer class="org.wltea.analyzer.lucene.IKTokenizerFactory" useSmart="false" isMaxWordLength="false"/>
+                		        <filter class="solr.LowerCaseFilterFactory"/>
+                		    </analyzer>
+                		 </fieldType>
+                	<!-- 添加的业务字段 -->
+                	<field name="item_title" type="text_ik" indexed="true" stored="true"/>
+                	<field name="item_sell_point" type="text_ik" indexed="true" stored="true"/>
+                	<field name="item_price"  type="long" indexed="true" stored="true"/>
+                	<field name="item_image" type="string" indexed="false" stored="true" />
+                	<field name="item_category_name" type="string" indexed="true" stored="true" />
+                	<field name="item_desc" type="text_ik" indexed="true" stored="false" />
+                
+                	<field name="item_keywords" type="text_ik" indexed="true" stored="false" multiValued="true"/>
+                	<copyField source="item_title" dest="item_keywords"/>
+                	<copyField source="item_sell_point" dest="item_keywords"/>
+                	<copyField source="item_category_name" dest="item_keywords"/>
+                	<copyField source="item_desc" dest="item_keywords"/>
+    
+    5、solr配置业务字段
+      是否存到索引库中：
+        1、在搜索时是否需要在此字段上进行搜索。例如：商品名称、商品的卖点、商品的描述
+        2、后续的业务是否需要用到此字段。例如：商品id。
+           需要用到的字段：
+           商品id 商品title 卖点 价格 商品图片 商品分类名称 商品描述
+           
+           Solr中的业务字段：
+           1、id——》商品id
+           其他的对应字段创建solr的字段。
+    
+
+
+````
+
+##### 21.solrJ的使用
+```` 
+    1、jar包依赖
+        <!-- solr客户端 -->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+        </dependency>
+        
+        //创建一连接
+        SolrServer solrServer = new HttpSolrServer("http://127.0.0.1:8080/solr/collection1");
+    2、使用solrJ添加文档(把商品信息导入到索引库)
+        ①、使用java程序读取mysql数据库中的商品信息，然后创建solr文档对象，把商品信息写入索引库。
+        ②、为了灵活的进行分布式部署需要创建一个搜索的服务工程发布 搜素服务。jitb2c-search。
+        
 ````
