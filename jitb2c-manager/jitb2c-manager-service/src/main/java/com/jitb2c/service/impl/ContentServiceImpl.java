@@ -4,11 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jitb2c.common.pojo.EUDataGridResult;
 import com.jitb2c.common.pojo.JitB2CResult;
+import com.jitb2c.common.utils.ExceptionUtil;
+import com.jitb2c.common.utils.HttpClientUtil;
 import com.jitb2c.mapper.TbContentMapper;
 import com.jitb2c.pojo.TbContent;
 import com.jitb2c.pojo.TbContentExample;
 import com.jitb2c.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,6 +26,13 @@ public class ContentServiceImpl implements ContentService {
 
     @Autowired
     TbContentMapper contentMapper;
+
+    @Value("${REST_BASE_URL}")
+    private String REST_BASE_URL;
+
+    @Value("${REST_CONTENT_SYNC_URL}")
+    private String REST_CONTENT_SYNC_URL;
+
 
     /**
      * 根据分类Id和分页参数查询内容
@@ -55,10 +65,18 @@ public class ContentServiceImpl implements ContentService {
      */
     @Override
     public JitB2CResult saveContent(TbContent content) {
+        //补全pojo内容
         content.setCreated(new Date());
         content.setUpdated(new Date());
-
         contentMapper.insert(content);
+
+        try {
+            //添加缓存同步逻辑
+            HttpClientUtil.doGet(REST_BASE_URL + REST_CONTENT_SYNC_URL + content.getCategoryId());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return JitB2CResult.ok();
+
     }
 }

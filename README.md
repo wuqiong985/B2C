@@ -19,7 +19,7 @@ B2C毕设项目（Idea 创建）
       Mybatis的逆向工程。根据数据库表生成java代码。
       生成过程[Idea使用mybatis插件生成逆向工程](https://segmentfault.com/a/1190000009058867)
       注意，mybatisGenerator中的mybatis-generator-config_1_0.dtd文件获取不到，直接从网上下了一个，放在resource中，直接引用位置
-      详情见“E:\淘淘商城\mybatisGenerator”目录下新增的Idea工程
+      详情见“E:\金科商城\mybatisGenerator”目录下新增的Idea工程
 ````
 
 ##### 3.SSM框架整合
@@ -712,5 +712,28 @@ B2C毕设项目（Idea 创建）
     2、使用solrJ添加文档(把商品信息导入到索引库)
         ①、使用java程序读取mysql数据库中的商品信息，然后创建solr文档对象，把商品信息写入索引库。
         ②、为了灵活的进行分布式部署需要创建一个搜索的服务工程发布 搜素服务。jitb2c-search。
-        
+    
+    3、http形式的服务。对外提供搜索服务是一个get形式的服务。调用此服务时需要查询条件，分页条件可以使用page（要显示第几页）、
+       rows（每页显示的记录数）。返回一个json格式的数据。可以使用jitb2cResult包装一个商品列表转换成json。
+      
+       请求的url：/search/query/{查询条件}/{page}/{rows}
+                  /search/query?q={查询条件}&page={page}&rows={rows} (用这个)
+       返回的结果：jitb2cResult包装商品列表。
+     
+       Dao：
+           分析：尽可能的做的通用一些。参数应该是SolrQuery。返回商品列表、查询结果总记录数
+     
+       Service：
+           功能：接收查询条件。查询条件及分页条件（page、rows），创建一个SolrQuery对象。指定查询条件、分页条件、默认搜索域、
+              高亮显示。调用dao层执行查询。得到查询结果计算总页数。返回SearchResult对象。
+    
+       Controller
+           接收查询参数：查询条件、page、rows
+           调用Service执行查询返回一个查询结果对象。
+           把查询结果包装到TaotaoResult中返回，结果是json格式的数据。
+           
+           如果查询条件为空，返回状态码：400，消息：查询条件不能为空。
+           Page为空：默认为1
+           Rows为空：默认为60
+
 ````
