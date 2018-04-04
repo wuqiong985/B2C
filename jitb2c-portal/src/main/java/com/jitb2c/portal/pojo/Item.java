@@ -70,4 +70,16 @@ public class Item {
         this.itemDesc = itemDesc;
     }
 
+    /**
+     * 防止image是多张图片叠加成的字符串，转换为数组，然后前台取第一个
+     * @return
+     */
+    public String[] getImages(){
+        if (image != null){
+           String[] images = image.split(",");
+           return images;
+        }
+        return null;
+    }
+
 }

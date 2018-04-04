@@ -21,6 +21,13 @@ public class SearchController {
     @Autowired
     SearchService searchService;
 
+    /**
+     * 通过前台传来的查询条件solr搜索
+     * @param queryString 搜索条件
+     * @param page  页数
+     * @param model 视图，向页面传递参数
+     * @return
+     */
     @RequestMapping("/search")
     public String search(@RequestParam("q")String queryString, @RequestParam(defaultValue="1")Integer page, Model model) {
         if (queryString != null) {
