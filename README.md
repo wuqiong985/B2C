@@ -738,8 +738,61 @@ B2C毕设项目（Idea 创建）
 
 ````
 
-#### 八、商品详情展示
-##### 
+##### 22.实现商品搜索流程
 ```` 
-    http://localhost:8083/search.html?q=
+    1.前台jsp调用服务
+    base-v1.js
+        function search(a) {
+            //调用portal的搜索服务，在通过portal的搜索服务跳转到search层搜索
+            var b = "http://localhost:8083/search.html?q=" + encodeURIComponent(document.getElementById(a).value);
+            return window.location.href = b;
+        }
+        
+    2.前台的url调用jitb2c-potal的服务
+        jitb2c-potal --> SearchController 
+        传入查询参数q和页数page
+        
+    3.jitb2c-potal的SearchService调用jitb2c-search的服务SearchService
+        传入查询参数q和页数page
+        
+    4.jitb2c-search 的 SearchService 再去调用 Solr 服务 返回结果，逐层向上返回
+    
+````
+
+#### 八、商品详情展示
+````
+    1、需要在portal中调用rest发布的服务，查询商品详情
+        1.商品信息
+        2.商品的描述
+        3.商品的规格
+    
+    2、点击商品的图片，打开商品详情页面
+        a)	商品基本信息
+        b)	延迟加载商品详情。延迟一秒加载使用ajax
+        c)	商品的规格参数。按需加载，当用户点击商品规格参数tab页，加载ajax。
+
+    3、需要在jitb2c-rest工程中发布服务
+      1、取商品基本信息的服务
+      2、取商品描述的服务
+      3、取商品规格的服务
+      需要把商品信息添加到缓存中。设置商品的过期时间，过期时间为一天。需要缓存同步。
+      
+    4、添加缓存逻辑
+        Redis的hash类型中的key是不能设置过期时间。如果还需要对key进行分类可以使用折中的方案。
+        Key的命名方式：
+            ItJit:javaee03:01=wq
+            ItJit:javaee03:02=lz
+        在redis中存储后如下:
+            ItJit
+               |
+               |----javaee03
+                       |------ItJit:javaee03:01=wq
+                       |------ItJit:javaee03:02=lz   
+                                        
+      商品key的定义:
+        REDIS_ITEM_KEY:商品ID:base = json
+      商品描述的定义：
+        REDIS_ITEM_KEY:商品ID:desc = json
+      规格参数的定义
+        REDIS_ITEM_KEY:商品ID:param = json
 ````

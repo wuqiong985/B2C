@@ -27,7 +27,7 @@ public class SearchController {
      * 根据参数查询商品信息
      * @param queryString 搜索条件
      * @param page 页数
-     * @param rows 记录总条数
+     * @param rows 每页条数
      * @return
      */
     @RequestMapping(value="/query", method= RequestMethod.GET)
