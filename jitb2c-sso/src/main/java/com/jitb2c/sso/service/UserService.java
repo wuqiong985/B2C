@@ -1,6 +1,7 @@
 package com.jitb2c.sso.service;
 
 import com.jitb2c.common.pojo.JitB2CResult;
+import com.jitb2c.pojo.TbUser;
 
 /**
  * @Author wuqiong6
@@ -9,4 +10,9 @@ import com.jitb2c.common.pojo.JitB2CResult;
 public interface UserService {
 
     JitB2CResult checkData(String content,Integer type);
+
+    JitB2CResult createUser(TbUser user);
+
+    JitB2CResult userLogin(String userName,String password);
+
 }
