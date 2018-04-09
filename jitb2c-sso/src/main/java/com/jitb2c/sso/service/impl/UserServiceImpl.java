@@ -7,7 +7,7 @@ import com.jitb2c.pojo.TbUser;
 import com.jitb2c.pojo.TbUserExample;
 import com.jitb2c.sso.dao.JedisClient;
 import com.jitb2c.sso.service.UserService;
-import com.sun.org.apache.regexp.internal.RE;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -104,5 +104,33 @@ public class UserServiceImpl implements UserService {
         jedisClient.expire(REDIS_USER_SESSION_KEY + ":" + token,SSO_SESSION_EXPIRE);
         //返回token
         return JitB2CResult.ok(token);
+    }
+
+    @Override
+    public JitB2CResult getUserByToken(String token) {
+
+        //根据token从redis中查询用户信息
+        String json = jedisClient.get(REDIS_USER_SESSION_KEY + ":" + token);
+        //判断json是否为空
+        if (StringUtils.isBlank(json)) {
+            return JitB2CResult.build(400,"此session已经过期，请重新登录");
+        }
+        //不为空，更新过期时间
+        jedisClient.expire(REDIS_USER_SESSION_KEY + ":" + token,SSO_SESSION_EXPIRE);
+        //返回用户信息
+        return JitB2CResult.ok(JsonUtils.jsonToPojo(json,TbUser.class));
+    }
+
+    @Override
+    public JitB2CResult userLogout(String token) {
+
+        //根据token从redis中删除用户信息
+        Long delResult =  jedisClient.del(REDIS_USER_SESSION_KEY + ":" + token);
+
+        if (delResult == 1){
+            return JitB2CResult.ok();
+        } else {
+            return JitB2CResult.build(400,"该用户不存在或者未登录");
+        }
     }
 }

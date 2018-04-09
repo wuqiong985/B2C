@@ -15,4 +15,7 @@ public interface UserService {
 
     JitB2CResult userLogin(String userName,String password);
 
+    JitB2CResult getUserByToken(String token);
+
+    JitB2CResult userLogout(String token);
 }

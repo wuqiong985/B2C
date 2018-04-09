@@ -91,4 +91,43 @@ public class UserController {
             return JitB2CResult.build(500,ExceptionUtil.getStackTrace(e));
         }
     }
+
+    @RequestMapping(value = "/token/{token}")
+    @ResponseBody
+    public Object checkToken(@PathVariable String token,String callback){
+        JitB2CResult result = null;
+        try {
+            result = userService.getUserByToken(token);
+        } catch (Exception e){
+            result = JitB2CResult.build(500,ExceptionUtil.getStackTrace(e));
+        }
+
+        //判断是否为jsonp调用
+        if (StringUtils.isBlank(callback)) {
+            return  result;
+        } else {
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
+            mappingJacksonValue.setJsonpFunction(callback);
+            return mappingJacksonValue;
+        }
+    }
+
+    @RequestMapping(value = "/logout/{token}")
+    @ResponseBody
+    public Object logout(@PathVariable String token,String callback){
+        JitB2CResult result = null;
+        try{
+            result = userService.userLogout(token);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (StringUtils.isBlank(callback)){
+            return result;
+        } else {
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(result);
+            mappingJacksonValue.setJsonpFunction(callback);
+            return mappingJacksonValue;
+        }
+    }
 }
