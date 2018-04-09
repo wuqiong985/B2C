@@ -1,11 +1,11 @@
 package com.jitb2c.rest.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.jitb2c.common.pojo.JitB2CResult;
 import com.jitb2c.common.utils.JsonUtils;
 import com.jitb2c.mapper.TbItemDescMapper;
 import com.jitb2c.mapper.TbItemMapper;
 import com.jitb2c.mapper.TbItemParamItemMapper;
+import com.jitb2c.mapper.TbItemParamMapper;
 import com.jitb2c.pojo.*;
 import com.jitb2c.rest.dao.JedisClient;
 import com.jitb2c.rest.service.ItemService;
@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
 
         try {
             //若缓存没有查询到，则把商品信息写入缓存
-            jedisClient.set(REDIS_ITEM_KEY + ":" + itemId + ":base", JSONUtils.toJSONString(item));
+            jedisClient.set(REDIS_ITEM_KEY + ":" + itemId + ":base", JsonUtils.objectToJson(item));
             //设置key的有效期
             jedisClient.expire(REDIS_ITEM_KEY + ":" + itemId + ":base",REDIS_ITEM_EXPIRE);
         }catch (Exception e){
@@ -138,7 +138,7 @@ public class ItemServiceImpl implements ItemService {
             //从数据库查完之后存入缓存
             try {
                 //若缓存没有查询到，则把规格参数写入缓存
-                jedisClient.set(REDIS_ITEM_KEY + ":" + itemId + ":param", JSONUtils.toJSONString(itemParamItem));
+                jedisClient.set(REDIS_ITEM_KEY + ":" + itemId + ":param", JsonUtils.objectToJson(itemParamItem));
                 //设置key的有效期
                 jedisClient.expire(REDIS_ITEM_KEY + ":" + itemId + ":param",REDIS_ITEM_EXPIRE);
             }catch (Exception e){

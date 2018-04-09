@@ -795,4 +795,7 @@ B2C毕设项目（Idea 创建）
         REDIS_ITEM_KEY:商品ID:desc = json
       规格参数的定义
         REDIS_ITEM_KEY:商品ID:param = json
+    
+    5、portal调用rest的服务，分开调用
+        
 ````

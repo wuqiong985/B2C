@@ -30,7 +30,7 @@ public class SearchController {
      */
     @RequestMapping("/search")
     public String search(@RequestParam("q")String queryString, @RequestParam(defaultValue="1")Integer page, Model model) {
-        if (queryString != null) {
+            if (queryString != null) {
             try {
                 queryString = new String(queryString.getBytes("iso8859-1"), "utf-8");
             } catch (UnsupportedEncodingException e) {
