@@ -33,7 +33,7 @@
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
     <!-- jedis单机版实现类 -->
-    <bean id="jedisClient" class="com.jitb2c.rest.dao.impl.JedisClientSingleImpl"/>
+    <bean id="jedisClient" class="com.jitb2c.sso.dao.impl.JedisClientSingleImpl"/>
     <!--jedis 集群版配置-->
     <!--<bean id="redisClient" class="redis.clients.jedis.JedisCluster">-->
         <!--<constructor-arg name="nodes" >-->
@@ -67,5 +67,5 @@
         <!--<constructor-arg name="poolConfig" ref="jedisPoolConfig"/>-->
     <!--</bean>-->
     <!-- 集群JedisClient 实现类-->
-    <!--<bean id="jedisClientCluster" class="com.jitb2c.rest.dao.impl.JedisClientClusterImpl"></bean>-->
+    <!--<bean id="jedisClientCluster" class="com.jitb2c.sso.dao.impl.JedisClientClusterImpl"></bean>-->
 </beans>

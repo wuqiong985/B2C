@@ -33,7 +33,7 @@
     <!-- 切面 -->
     <aop:config>
         <aop:advisor advice-ref="txAdvice"
-                     pointcut="execution(* com.jitb2c.rest.service.*.*(..))" />
+                     pointcut="execution(* com.jitb2c.sso.service.*.*(..))" />
     </aop:config>
 
 </beans>
